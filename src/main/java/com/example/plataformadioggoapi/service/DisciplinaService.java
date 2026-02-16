@@ -5,6 +5,7 @@ import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.mapper.DisciplinaMapper;
 import com.example.plataformadioggoapi.model.Disciplina;
 import com.example.plataformadioggoapi.repository.DisciplinaRepository;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +23,13 @@ public class DisciplinaService {
     }
 
     public List<DisciplinaResponseDTO> listarDisciplinas() {
-        List<Disciplina> disciplinas = disciplinaRepository.findAll();
-
-        return disciplinaMapper.toDTOList(disciplinas);
+        return disciplinaRepository.findAll()
+                .stream()
+                .map(disciplinaMapper::toDTO)
+                .toList();
     }
 
-    public DisciplinaResponseDTO buscarPorId(String id) {
+    public DisciplinaResponseDTO buscarPorId(ObjectId id) {
         Disciplina disciplina = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
@@ -42,7 +44,7 @@ public class DisciplinaService {
         return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
-    public DisciplinaResponseDTO atualizarDisciplina(String id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
@@ -53,7 +55,7 @@ public class DisciplinaService {
         return disciplinaMapper.toDTO(salva);
     }
 
-    public DisciplinaResponseDTO atualizarParcialDisciplina(String id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
@@ -61,16 +63,12 @@ public class DisciplinaService {
             disciplinaExistente.setNome(disciplina.getNome());
         }
 
-        if (disciplina.getUsuarioProfessor() != null && !disciplina.getUsuarioProfessor().isBlank()) {
-            disciplinaExistente.setUsuarioProfessor(disciplina.getUsuarioProfessor());
-        }
-
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
 
         return disciplinaMapper.toDTO(salva);
     }
 
-    public void deletarDisciplina(String id) {
+    public void deletarDisciplina(ObjectId id) {
         if (!disciplinaRepository.existsById(id)) {
             throw new RuntimeException("Disciplina de ID " + id + " não encontrada.");
         }

@@ -5,6 +5,7 @@ import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.service.DisciplinaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class DisciplinaController {
 
     @GetMapping("/listarPorId/{id}")
     @Operation(summary = "Buscar disciplina por ID", description = "Retorna uma disciplina específica pelo seu ID")
-    public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable String id) {
+    public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable ObjectId id) {
         DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(id);
         return ResponseEntity.ok(disciplina);
     }
@@ -45,7 +46,7 @@ public class DisciplinaController {
     @PutMapping("/atualizar/{id}")
     @Operation(summary = "Atualizar disciplina", description = "Atualiza os dados de uma disciplina existente")
     public ResponseEntity<DisciplinaResponseDTO> atualizarDisciplina(
-            @PathVariable String id,
+            @PathVariable ObjectId id,
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
         DisciplinaResponseDTO disciplinaAtualizada = disciplinaService.atualizarDisciplina(id, disciplina);
@@ -55,7 +56,7 @@ public class DisciplinaController {
     @PatchMapping("/atualizar_parcial/{id}")
     @Operation(summary = "Atualizar parcialmente uma disciplina", description = "Atualiza apenas os campos fornecidos de uma disciplina existente")
     public ResponseEntity<DisciplinaResponseDTO> atualizarParcialDisciplina(
-            @PathVariable String id,
+            @PathVariable ObjectId id,
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
         DisciplinaResponseDTO disciplinaAtualizada = disciplinaService.atualizarParcialDisciplina(id, disciplina);
@@ -64,7 +65,7 @@ public class DisciplinaController {
 
     @DeleteMapping("/deletar/{id}")
     @Operation(summary = "Deletar disciplina", description = "Remove uma disciplina existente pelo seu ID")
-    public ResponseEntity<Void> deletarDisciplina(@PathVariable String id) {
+    public ResponseEntity<Void> deletarDisciplina(@PathVariable ObjectId id) {
         disciplinaService.deletarDisciplina(id);
         return ResponseEntity.noContent().build();
     }
