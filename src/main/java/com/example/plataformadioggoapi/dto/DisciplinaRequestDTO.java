@@ -14,4 +14,6 @@ public class DisciplinaRequestDTO {
     @Schema(description = "Nome da disciplina", example = "Matemática")
     private String nome;
 
+    @Schema(description = "ID do professor dono da disciplina", example = "65f1a9c2d3e4f56789ab0123")
+    private String professorId;
 }
