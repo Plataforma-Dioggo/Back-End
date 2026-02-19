@@ -17,5 +17,9 @@ public class Disciplina {
     @Id
     @Field("_id")
     private ObjectId id;
+
     private String nome;
+
+    @Field("professor_id")
+    private ObjectId professorId;
 }

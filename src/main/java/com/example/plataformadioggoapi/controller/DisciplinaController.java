@@ -31,8 +31,13 @@ public class DisciplinaController {
 
     @GetMapping("/listarPorId/{id}")
     @Operation(summary = "Buscar disciplina por ID", description = "Retorna uma disciplina específica pelo seu ID")
-    public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable ObjectId id) {
-        DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(id);
+    public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable String id) {
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(new ObjectId(id));
         return ResponseEntity.ok(disciplina);
     }
 
@@ -46,27 +51,46 @@ public class DisciplinaController {
     @PutMapping("/atualizar/{id}")
     @Operation(summary = "Atualizar disciplina", description = "Atualiza os dados de uma disciplina existente")
     public ResponseEntity<DisciplinaResponseDTO> atualizarDisciplina(
-            @PathVariable ObjectId id,
+            @PathVariable String id,
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
-        DisciplinaResponseDTO disciplinaAtualizada = disciplinaService.atualizarDisciplina(id, disciplina);
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        DisciplinaResponseDTO disciplinaAtualizada =
+                disciplinaService.atualizarDisciplina(new ObjectId(id), disciplina);
+
         return ResponseEntity.ok(disciplinaAtualizada);
     }
 
     @PatchMapping("/atualizar_parcial/{id}")
     @Operation(summary = "Atualizar parcialmente uma disciplina", description = "Atualiza apenas os campos fornecidos de uma disciplina existente")
     public ResponseEntity<DisciplinaResponseDTO> atualizarParcialDisciplina(
-            @PathVariable ObjectId id,
+            @PathVariable String id,
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
-        DisciplinaResponseDTO disciplinaAtualizada = disciplinaService.atualizarParcialDisciplina(id, disciplina);
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        DisciplinaResponseDTO disciplinaAtualizada =
+                disciplinaService.atualizarParcialDisciplina(new ObjectId(id), disciplina);
+
         return ResponseEntity.ok(disciplinaAtualizada);
     }
 
     @DeleteMapping("/deletar/{id}")
     @Operation(summary = "Deletar disciplina", description = "Remove uma disciplina existente pelo seu ID")
-    public ResponseEntity<Void> deletarDisciplina(@PathVariable ObjectId id) {
-        disciplinaService.deletarDisciplina(id);
+    public ResponseEntity<Void> deletarDisciplina(@PathVariable String id) {
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        disciplinaService.deletarDisciplina(new ObjectId(id));
         return ResponseEntity.noContent().build();
     }
 }

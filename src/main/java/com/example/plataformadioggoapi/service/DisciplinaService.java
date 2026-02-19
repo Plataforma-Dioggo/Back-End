@@ -14,7 +14,6 @@ import java.util.List;
 public class DisciplinaService {
 
     private final DisciplinaRepository disciplinaRepository;
-
     private final DisciplinaMapper disciplinaMapper;
 
     public DisciplinaService(DisciplinaRepository repository, DisciplinaMapper disciplinaMapper) {
@@ -36,31 +35,67 @@ public class DisciplinaService {
         return disciplinaMapper.toDTO(disciplina);
     }
 
-    public DisciplinaResponseDTO criarDisciplina(DisciplinaRequestDTO disciplina) {
-        Disciplina novaDisciplina = disciplinaMapper.toEntity(disciplina);
+    public DisciplinaResponseDTO criarDisciplina(DisciplinaRequestDTO dto) {
+
+        if (dto.getNome() == null || dto.getNome().isBlank()) {
+            throw new RuntimeException("O nome da disciplina é obrigatório.");
+        }
+
+        if (dto.getProfessorId() == null || dto.getProfessorId().isBlank()) {
+            throw new RuntimeException("O professorId é obrigatório.");
+        }
+
+        if (!ObjectId.isValid(dto.getProfessorId())) {
+            throw new RuntimeException("professorId inválido.");
+        }
+
+        Disciplina novaDisciplina = disciplinaMapper.toEntity(dto);
 
         Disciplina disciplinaSalva = disciplinaRepository.save(novaDisciplina);
 
         return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
-    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO dto) {
+
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
-        disciplinaMapper.updateEntityFromDTO(disciplina, disciplinaExistente);
+        if (dto.getNome() == null || dto.getNome().isBlank()) {
+            throw new RuntimeException("O nome da disciplina é obrigatório.");
+        }
+
+        if (dto.getProfessorId() == null || dto.getProfessorId().isBlank()) {
+            throw new RuntimeException("O professorId é obrigatório.");
+        }
+
+        if (!ObjectId.isValid(dto.getProfessorId())) {
+            throw new RuntimeException("professorId inválido.");
+        }
+
+        disciplinaMapper.updateEntityFromDTO(dto, disciplinaExistente);
 
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
 
         return disciplinaMapper.toDTO(salva);
     }
 
-    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO dto) {
+
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
-        if (disciplina.getNome() != null && !disciplina.getNome().isBlank()) {
-            disciplinaExistente.setNome(disciplina.getNome());
+        if (dto.getNome() != null && !dto.getNome().isBlank()) {
+            disciplinaExistente.setNome(dto.getNome());
+        }
+
+        if (dto.getProfessorId() != null && !dto.getProfessorId().isBlank()) {
+
+            if (!ObjectId.isValid(dto.getProfessorId())) {
+                throw new RuntimeException("professorId inválido.");
+            }
+
+            disciplinaExistente.setProfessorId(new ObjectId(dto.getProfessorId()));
         }
 
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
