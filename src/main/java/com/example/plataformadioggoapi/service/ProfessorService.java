@@ -29,60 +29,106 @@ public class ProfessorService {
     }
 
     public List<ProfessorResponseDTO> listarProfessores() {
-        List<ProfessorResponseDTO> professores = professorRepository.listarProfessoresComNomeDisciplinas();
-
-        return professores;
+        return professorRepository.listarProfessoresComNomeDisciplinas();
     }
 
     public ProfessorResponseDTO buscarPorId(ObjectId id) {
-        ProfessorResponseDTO professor = professorRepository.buscarProfessorComNomeDisciplinas(id)
+        return professorRepository.buscarProfessorComNomeDisciplinas(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
-
-        return professor;
     }
 
-    public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO professorDTO) {
+    public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO dto) {
 
-        String senhaHash = passwordEncoder.encode(professorDTO.getSenha());
-        professorDTO.setSenha(senhaHash);
+        if (dto.getNome() == null || dto.getNome().isBlank()) {
+            throw new RuntimeException("O nome é obrigatório.");
+        }
 
-        Professor novoProfessor = professorMapper.toEntity(professorDTO);
+        if (dto.getUsuario() == null || dto.getUsuario().isBlank()) {
+            throw new RuntimeException("O usuário é obrigatório.");
+        }
 
-        Professor salvo = professorRepository.save(novoProfessor);
+        if (dto.getSenha() == null || dto.getSenha().isBlank()) {
+            throw new RuntimeException("A senha é obrigatória.");
+        }
 
-        return professorMapper.toDTO(salvo);
+        // valida lista de disciplinas
+        if (dto.getDisciplinaId() != null) {
+            for (String id : dto.getDisciplinaId()) {
+                if (!ObjectId.isValid(id)) {
+                    throw new RuntimeException("DisciplinaId inválido: " + id);
+                }
+            }
+        }
+
+        dto.setSenha(passwordEncoder.encode(dto.getSenha()));
+
+        Professor novo = professorMapper.toEntity(dto);
+
+        Professor salvo = professorRepository.save(novo);
+
+        // retorna com nomeDisciplinas preenchido
+        return buscarPorId(salvo.getId());
     }
 
-    public ProfessorResponseDTO atualizarProfessor(ObjectId id, ProfessorRequestDTO professorDTO) {
+    public ProfessorResponseDTO atualizarProfessor(ObjectId id, ProfessorRequestDTO dto) {
+
         Professor existente = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
 
-        professorMapper.updateEntityFromDTO(professorDTO, existente);
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            dto.setSenha(passwordEncoder.encode(dto.getSenha()));
+        } else {
+            dto.setSenha(existente.getSenha());
+        }
+
+        if (dto.getDisciplinaId() != null) {
+            for (String discId : dto.getDisciplinaId()) {
+                if (!ObjectId.isValid(discId)) {
+                    throw new RuntimeException("DisciplinaId inválido: " + discId);
+                }
+            }
+        }
+
+        professorMapper.updateEntityFromDTO(dto, existente);
 
         Professor salvo = professorRepository.save(existente);
 
-        return professorMapper.toDTO(salvo);
+        return buscarPorId(salvo.getId());
     }
 
-    public ProfessorResponseDTO atualizarParcialProfessor(ObjectId id, ProfessorRequestDTO professorDTO) {
+    public ProfessorResponseDTO atualizarParcialProfessor(ObjectId id, ProfessorRequestDTO dto) {
+
         Professor existente = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
 
-        if (professorDTO.getUsuario() != null && !professorDTO.getUsuario().isBlank()) {
-            existente.setUsuario(professorDTO.getUsuario());
+        if (dto.getNome() != null && !dto.getNome().isBlank()) {
+            existente.setNome(dto.getNome());
         }
 
-        if (professorDTO.getSenha() != null && !professorDTO.getSenha().isBlank()) {
-            existente.setSenha(passwordEncoder.encode(professorDTO.getSenha()));
+        if (dto.getUsuario() != null && !dto.getUsuario().isBlank()) {
+            existente.setUsuario(dto.getUsuario());
         }
 
-        if (professorDTO.getDisciplinas() != null && !professorDTO.getDisciplinas().isEmpty()) {
-            existente.setDisciplinas(professorDTO.getDisciplinas());
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
+            existente.setSenha(passwordEncoder.encode(dto.getSenha()));
+        }
+
+        if (dto.getDisciplinaId() != null && !dto.getDisciplinaId().isEmpty()) {
+
+            for (String discId : dto.getDisciplinaId()) {
+                if (!ObjectId.isValid(discId)) {
+                    throw new RuntimeException("DisciplinaId inválido: " + discId);
+                }
+            }
+
+            existente.setDisciplinaId(
+                    dto.getDisciplinaId().stream().map(ObjectId::new).toList()
+            );
         }
 
         Professor salvo = professorRepository.save(existente);
 
-        return professorMapper.toDTO(salvo);
+        return buscarPorId(salvo.getId());
     }
 
     public void deletarProfessor(ObjectId id) {

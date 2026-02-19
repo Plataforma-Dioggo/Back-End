@@ -23,5 +23,7 @@ public class Professor {
     private String nome;
     private String usuario;
     private String senha;
-    private List<ObjectId> disciplinas;
+
+    @Field("disciplina_id")
+    private List<ObjectId> disciplinaId;
 }

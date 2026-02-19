@@ -2,7 +2,6 @@ package com.example.plataformadioggoapi.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -23,6 +22,9 @@ public class ProfessorRequestDTO {
     @Schema(description = "Senha do professor", example = "Senha123")
     private String senha;
 
-    @Schema(description = "IDs das disciplinas associadas ao professor", example = "[\"65f1a9c2d3e4f56789ab0123\"]")
-    private List<ObjectId> disciplinas;
+    @Schema(
+            description = "IDs das disciplinas associadas ao professor",
+            example = "[\"65f1a9c2d3e4f56789ab0123\"]"
+    )
+    private List<String> disciplinaId;
 }

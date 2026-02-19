@@ -25,15 +25,18 @@ public class ProfessorController {
     @GetMapping("/listar")
     @Operation(summary = "Listar todos os professores", description = "Retorna uma lista de todos os professores cadastrados")
     public ResponseEntity<List<ProfessorResponseDTO>> listarProfessores() {
-        List<ProfessorResponseDTO> professores = professorService.listarProfessores();
-        return ResponseEntity.ok(professores);
+        return ResponseEntity.ok(professorService.listarProfessores());
     }
 
     @GetMapping("/listarPorId/{id}")
     @Operation(summary = "Buscar professor por ID", description = "Retorna um professor específico pelo seu ID")
-    public ResponseEntity<ProfessorResponseDTO> buscarPorId(@PathVariable ObjectId id) {
-        ProfessorResponseDTO professor = professorService.buscarPorId(id);
-        return ResponseEntity.ok(professor);
+    public ResponseEntity<ProfessorResponseDTO> buscarPorId(@PathVariable String id) {
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        return ResponseEntity.ok(professorService.buscarPorId(new ObjectId(id)));
     }
 
     @PostMapping("/criar")
@@ -46,27 +49,42 @@ public class ProfessorController {
     @PutMapping("/atualizar/{id}")
     @Operation(summary = "Atualizar professor", description = "Atualiza os dados de um professor existente")
     public ResponseEntity<ProfessorResponseDTO> atualizarProfessor(
-            @PathVariable ObjectId id,
+            @PathVariable String id,
             @RequestBody ProfessorRequestDTO professor
     ) {
-        ProfessorResponseDTO atualizado = professorService.atualizarProfessor(id, professor);
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        ProfessorResponseDTO atualizado = professorService.atualizarProfessor(new ObjectId(id), professor);
         return ResponseEntity.ok(atualizado);
     }
 
     @PatchMapping("/atualizar_parcial/{id}")
     @Operation(summary = "Atualizar parcialmente um professor", description = "Atualiza apenas os campos fornecidos de um professor existente")
     public ResponseEntity<ProfessorResponseDTO> atualizarParcialProfessor(
-            @PathVariable ObjectId id,
+            @PathVariable String id,
             @RequestBody ProfessorRequestDTO professor
     ) {
-        ProfessorResponseDTO atualizado = professorService.atualizarParcialProfessor(id, professor);
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        ProfessorResponseDTO atualizado = professorService.atualizarParcialProfessor(new ObjectId(id), professor);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/deletar/{id}")
     @Operation(summary = "Deletar professor", description = "Remove um professor existente pelo seu ID")
-    public ResponseEntity<Void> deletarProfessor(@PathVariable ObjectId id) {
-        professorService.deletarProfessor(id);
+    public ResponseEntity<Void> deletarProfessor(@PathVariable String id) {
+
+        if (!ObjectId.isValid(id)) {
+            throw new RuntimeException("ID inválido.");
+        }
+
+        professorService.deletarProfessor(new ObjectId(id));
         return ResponseEntity.noContent().build();
     }
 }
