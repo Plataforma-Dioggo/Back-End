@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DisciplinaMapper {
 
+    @Mapping(target = "id", source = "id", qualifiedByName = "objectIdToString")
     @Mapping(target = "professorId", source = "professorId", qualifiedByName = "objectIdToString")
     DisciplinaResponseDTO toDTO(Disciplina disciplina);
 

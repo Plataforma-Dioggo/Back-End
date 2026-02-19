@@ -22,85 +22,51 @@ public class DisciplinaService {
     }
 
     public List<DisciplinaResponseDTO> listarDisciplinas() {
-        return disciplinaRepository.findAll()
-                .stream()
-                .map(disciplinaMapper::toDTO)
-                .toList();
+        return disciplinaRepository.listarDisciplinasComProfessor();
     }
 
     public DisciplinaResponseDTO buscarPorId(ObjectId id) {
-        Disciplina disciplina = disciplinaRepository.findById(id)
+        return disciplinaRepository.buscarDisciplinaComProfessor(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
-
-        return disciplinaMapper.toDTO(disciplina);
     }
 
-    public DisciplinaResponseDTO criarDisciplina(DisciplinaRequestDTO dto) {
+    public DisciplinaResponseDTO criarDisciplina(DisciplinaRequestDTO disciplina) {
 
-        if (dto.getNome() == null || dto.getNome().isBlank()) {
-            throw new RuntimeException("O nome da disciplina é obrigatório.");
-        }
-
-        if (dto.getProfessorId() == null || dto.getProfessorId().isBlank()) {
-            throw new RuntimeException("O professorId é obrigatório.");
-        }
-
-        if (!ObjectId.isValid(dto.getProfessorId())) {
-            throw new RuntimeException("professorId inválido.");
-        }
-
-        Disciplina novaDisciplina = disciplinaMapper.toEntity(dto);
+        Disciplina novaDisciplina = disciplinaMapper.toEntity(disciplina);
 
         Disciplina disciplinaSalva = disciplinaRepository.save(novaDisciplina);
 
-        return disciplinaMapper.toDTO(disciplinaSalva);
+        return buscarPorId(disciplinaSalva.getId());
     }
 
-    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO dto) {
+    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
 
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
-        if (dto.getNome() == null || dto.getNome().isBlank()) {
-            throw new RuntimeException("O nome da disciplina é obrigatório.");
-        }
-
-        if (dto.getProfessorId() == null || dto.getProfessorId().isBlank()) {
-            throw new RuntimeException("O professorId é obrigatório.");
-        }
-
-        if (!ObjectId.isValid(dto.getProfessorId())) {
-            throw new RuntimeException("professorId inválido.");
-        }
-
-        disciplinaMapper.updateEntityFromDTO(dto, disciplinaExistente);
+        disciplinaMapper.updateEntityFromDTO(disciplina, disciplinaExistente);
 
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
 
-        return disciplinaMapper.toDTO(salva);
+        return buscarPorId(salva.getId());
     }
 
-    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO dto) {
+    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
 
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
 
-        if (dto.getNome() != null && !dto.getNome().isBlank()) {
-            disciplinaExistente.setNome(dto.getNome());
+        if (disciplina.getNome() != null && !disciplina.getNome().isBlank()) {
+            disciplinaExistente.setNome(disciplina.getNome());
         }
 
-        if (dto.getProfessorId() != null && !dto.getProfessorId().isBlank()) {
-
-            if (!ObjectId.isValid(dto.getProfessorId())) {
-                throw new RuntimeException("professorId inválido.");
-            }
-
-            disciplinaExistente.setProfessorId(new ObjectId(dto.getProfessorId()));
+        if (disciplina.getProfessorId() != null && !disciplina.getProfessorId().isBlank()) {
+            disciplinaExistente.setProfessorId(new ObjectId(disciplina.getProfessorId()));
         }
 
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
 
-        return disciplinaMapper.toDTO(salva);
+        return buscarPorId(salva.getId());
     }
 
     public void deletarDisciplina(ObjectId id) {
