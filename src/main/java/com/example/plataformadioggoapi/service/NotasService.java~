@@ -2,7 +2,6 @@ package com.example.plataformadioggoapi.service;
 
 import com.example.plataformadioggoapi.dto.NotasRequestDTO;
 import com.example.plataformadioggoapi.dto.NotasResponseDTO;
-import com.example.plataformadioggoapi.exception.NotaNotFoundException;
 import com.example.plataformadioggoapi.mapper.AtividadeNotaMapper;
 import com.example.plataformadioggoapi.mapper.NotasMapper;
 import com.example.plataformadioggoapi.model.AtividadeNota;

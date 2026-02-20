@@ -1,0 +1,26 @@
+package com.example.plataformadioggoapi.service;
+
+import com.example.plataformadioggoapi.dto.AlunoRequestDTO;
+import com.example.plataformadioggoapi.mapper.AlunoMapper;
+import com.example.plataformadioggoapi.model.Aluno;
+import com.example.plataformadioggoapi.repository.AlunoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class AlunoService {
+    private final AlunoRepository alunoRepository;
+
+    public Aluno cadastrarAluno(AlunoRequestDTO aluno) {
+        return alunoRepository.save(AlunoMapper.toEntity(aluno));
+    }
+
+    public Optional<Aluno> buscarPorMatricula(String matricula) {
+        return alunoRepository.findByMatricula(matricula);
+    }
+
+
+}

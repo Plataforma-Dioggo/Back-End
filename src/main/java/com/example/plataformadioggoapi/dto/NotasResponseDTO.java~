@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class NotasResponseDTO {
-    private List<AtividadeNotaResponseDTO> atividades;
+    private List<AtividadeNotaResponseDTO> notas;
     private List<Double> nota_n1;
     private List<Double> nota_n2;
     private Double media_n1;

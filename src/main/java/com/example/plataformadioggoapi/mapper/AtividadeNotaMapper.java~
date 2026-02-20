@@ -13,7 +13,7 @@ public class AtividadeNotaMapper {
                 .build();
     }
 
-    public static AtividadeNotaResponseDTO toResponseDTO(AtividadeNota atividadeNota) {
+    public static AtividadeNotaResponseDTO toDTO(AtividadeNota atividadeNota) {
         return AtividadeNotaResponseDTO.builder()
                 .nota(atividadeNota.getNota())
                 .nome_atividade(atividadeNota.getNome_atividade())

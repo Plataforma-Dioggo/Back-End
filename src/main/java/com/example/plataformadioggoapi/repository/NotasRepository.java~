@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface NotasRepository extends MongoRepository<Notas, String> {
     List<Notas> findByMatricula(String matricula);
 
-    Optional<Notas> findByMatriculaAndDisciplinaId(String matricula, String disciplinaId);
+    Optional<Notas>
 }
