@@ -1,4 +1,0 @@
-spring.application.name=plataforma-dioggo-api
-spring.data.mongodb.uri=${MONGODB_URI}
-spring.data.mongodb.database=${MONGODB_DATABASE}
-
