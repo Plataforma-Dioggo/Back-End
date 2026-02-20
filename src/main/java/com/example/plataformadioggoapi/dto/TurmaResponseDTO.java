@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Data
 public class TurmaResponseDTO {
-    private ObjectId id;
+    private String id;
     private String nome;
     private List<AlunoTurma> alunos;
     private Boolean liberarNotas;
