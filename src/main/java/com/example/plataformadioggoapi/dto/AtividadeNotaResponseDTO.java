@@ -1,0 +1,12 @@
+package com.example.plataformadioggoapi.dto;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class AtividadeNotaResponseDTO {
+    private Double nota;
+    private String nome_atividade;
+    private String atribuicao;
+}
