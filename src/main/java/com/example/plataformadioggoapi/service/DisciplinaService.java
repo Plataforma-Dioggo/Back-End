@@ -35,7 +35,7 @@ public class DisciplinaService {
 
         Disciplina disciplinaSalva = disciplinaRepository.save(novaDisciplina);
 
-        return buscarPorId(disciplinaSalva.getId());
+        return disciplinaMapper.toDTO(disciplinaSalva);
     }
 
     public DisciplinaResponseDTO atualizarDisciplina(String id, DisciplinaRequestDTO disciplina) {
