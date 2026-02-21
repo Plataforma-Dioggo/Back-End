@@ -33,4 +33,6 @@ public interface ProfessorRepository extends MongoRepository<Professor, String> 
             "{ $project: { _id: 0, nome: 1, usuario: 1, disciplinaId: 1, nomeDisciplinas: 1 } }"
     })
     Optional<ProfessorResponseDTO> buscarProfessorComNomeDisciplinas(String id);
+
+    Optional<Professor> findByUsuario(String usuario);
 }

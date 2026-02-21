@@ -38,7 +38,6 @@ public class ProfessorService {
 
     public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO dto) {
 
-
         if (dto.getNome() == null || dto.getNome().isBlank()) {
             throw new RuntimeException("O nome é obrigatório.");
         }
@@ -57,7 +56,7 @@ public class ProfessorService {
 
         Professor salvo = professorRepository.save(novo);
 
-        return buscarPorId(salvo.getId());
+        return professorMapper.toDTO(salvo);
     }
 
     public ProfessorResponseDTO atualizarProfessor(String id, ProfessorRequestDTO dto) {
