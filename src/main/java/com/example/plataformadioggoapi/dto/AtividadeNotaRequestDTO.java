@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class AtividadeNotaRequestDTO {
     private Double nota;
-    private String nome_atividade;
+    private String nomeAtividade;
     private String atribuicao;
 }

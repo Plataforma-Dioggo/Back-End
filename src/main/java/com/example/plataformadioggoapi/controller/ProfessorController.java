@@ -36,7 +36,7 @@ public class ProfessorController {
             throw new RuntimeException("ID inválido.");
         }
 
-        return ResponseEntity.ok(professorService.buscarPorId(new ObjectId(id)));
+        return ResponseEntity.ok(professorService.buscarPorId(id));
     }
 
     @PostMapping("/criar")
@@ -53,11 +53,7 @@ public class ProfessorController {
             @RequestBody ProfessorRequestDTO professor
     ) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
-
-        ProfessorResponseDTO atualizado = professorService.atualizarProfessor(new ObjectId(id), professor);
+        ProfessorResponseDTO atualizado = professorService.atualizarProfessor(id, professor);
         return ResponseEntity.ok(atualizado);
     }
 
@@ -68,11 +64,7 @@ public class ProfessorController {
             @RequestBody ProfessorRequestDTO professor
     ) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
-
-        ProfessorResponseDTO atualizado = professorService.atualizarParcialProfessor(new ObjectId(id), professor);
+        ProfessorResponseDTO atualizado = professorService.atualizarParcialProfessor(id, professor);
         return ResponseEntity.ok(atualizado);
     }
 
@@ -80,11 +72,8 @@ public class ProfessorController {
     @Operation(summary = "Deletar professor", description = "Remove um professor existente pelo seu ID")
     public ResponseEntity<Void> deletarProfessor(@PathVariable String id) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
 
-        professorService.deletarProfessor(new ObjectId(id));
+        professorService.deletarProfessor(id);
         return ResponseEntity.noContent().build();
     }
 }

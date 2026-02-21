@@ -8,7 +8,7 @@ import com.example.plataformadioggoapi.mapper.ObservacaoMapper;
 import com.example.plataformadioggoapi.model.Aluno;
 import com.example.plataformadioggoapi.model.Observacao;
 import com.example.plataformadioggoapi.repository.AlunoRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,12 +16,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AlunoService {
+
     private final AlunoRepository alunoRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AlunoService(AlunoRepository alunoRepository,
+                        PasswordEncoder passwordEncoder) {
+        this.alunoRepository = alunoRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Aluno cadastrarAluno(AlunoRequestDTO aluno) {
-        return alunoRepository.save(AlunoMapper.toEntity(aluno));
+
+        Aluno entity = AlunoMapper.toEntity(aluno);
+
+        entity.setSenha(passwordEncoder.encode(aluno.getSenha()));
+
+        return alunoRepository.save(entity);
     }
 
     public Optional<Aluno> buscarPorMatricula(String matricula) {

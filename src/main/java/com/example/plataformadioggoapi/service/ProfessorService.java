@@ -5,7 +5,6 @@ import com.example.plataformadioggoapi.dto.ProfessorResponseDTO;
 import com.example.plataformadioggoapi.mapper.ProfessorMapper;
 import com.example.plataformadioggoapi.model.Professor;
 import com.example.plataformadioggoapi.repository.ProfessorRepository;
-import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +31,13 @@ public class ProfessorService {
         return professorRepository.listarProfessoresComNomeDisciplinas();
     }
 
-    public ProfessorResponseDTO buscarPorId(ObjectId id) {
+    public ProfessorResponseDTO buscarPorId(String id) {
         return professorRepository.buscarProfessorComNomeDisciplinas(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
     }
 
     public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO dto) {
+
 
         if (dto.getNome() == null || dto.getNome().isBlank()) {
             throw new RuntimeException("O nome é obrigatório.");
@@ -51,26 +51,16 @@ public class ProfessorService {
             throw new RuntimeException("A senha é obrigatória.");
         }
 
-        // valida lista de disciplinas
-        if (dto.getDisciplinaId() != null) {
-            for (String id : dto.getDisciplinaId()) {
-                if (!ObjectId.isValid(id)) {
-                    throw new RuntimeException("DisciplinaId inválido: " + id);
-                }
-            }
-        }
-
         dto.setSenha(passwordEncoder.encode(dto.getSenha()));
 
         Professor novo = professorMapper.toEntity(dto);
 
         Professor salvo = professorRepository.save(novo);
 
-        // retorna com nomeDisciplinas preenchido
         return buscarPorId(salvo.getId());
     }
 
-    public ProfessorResponseDTO atualizarProfessor(ObjectId id, ProfessorRequestDTO dto) {
+    public ProfessorResponseDTO atualizarProfessor(String id, ProfessorRequestDTO dto) {
 
         Professor existente = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
@@ -81,14 +71,6 @@ public class ProfessorService {
             dto.setSenha(existente.getSenha());
         }
 
-        if (dto.getDisciplinaId() != null) {
-            for (String discId : dto.getDisciplinaId()) {
-                if (!ObjectId.isValid(discId)) {
-                    throw new RuntimeException("DisciplinaId inválido: " + discId);
-                }
-            }
-        }
-
         professorMapper.updateEntityFromDTO(dto, existente);
 
         Professor salvo = professorRepository.save(existente);
@@ -96,7 +78,7 @@ public class ProfessorService {
         return buscarPorId(salvo.getId());
     }
 
-    public ProfessorResponseDTO atualizarParcialProfessor(ObjectId id, ProfessorRequestDTO dto) {
+    public ProfessorResponseDTO atualizarParcialProfessor(String id, ProfessorRequestDTO dto) {
 
         Professor existente = professorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
@@ -113,25 +95,12 @@ public class ProfessorService {
             existente.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
 
-        if (dto.getDisciplinaId() != null && !dto.getDisciplinaId().isEmpty()) {
-
-            for (String discId : dto.getDisciplinaId()) {
-                if (!ObjectId.isValid(discId)) {
-                    throw new RuntimeException("DisciplinaId inválido: " + discId);
-                }
-            }
-
-            existente.setDisciplinaId(
-                    dto.getDisciplinaId().stream().map(ObjectId::new).toList()
-            );
-        }
-
         Professor salvo = professorRepository.save(existente);
 
         return buscarPorId(salvo.getId());
     }
 
-    public void deletarProfessor(ObjectId id) {
+    public void deletarProfessor(String id) {
         if (!professorRepository.existsById(id)) {
             throw new RuntimeException("Professor de ID " + id + " não encontrado.");
         }

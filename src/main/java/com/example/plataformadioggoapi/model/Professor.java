@@ -18,12 +18,12 @@ public class Professor {
 
     @Id
     @Field("_id")
-    private ObjectId id;
+    private String id;
 
     private String nome;
     private String usuario;
     private String senha;
 
     @Field("disciplina_id")
-    private List<ObjectId> disciplinaId;
+    private List<String> disciplinaId;
 }

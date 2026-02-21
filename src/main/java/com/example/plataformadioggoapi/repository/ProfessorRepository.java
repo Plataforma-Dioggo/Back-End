@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProfessorRepository extends MongoRepository<Professor, ObjectId> {
+public interface ProfessorRepository extends MongoRepository<Professor, String> {
 
     @Aggregation(pipeline = {
             "{ $lookup: { from: 'disciplinas', localField: 'disciplina_id', foreignField: '_id', as: 'disciplinasInfo' } }",
@@ -32,5 +32,5 @@ public interface ProfessorRepository extends MongoRepository<Professor, ObjectId
                     "} }",
             "{ $project: { _id: 0, nome: 1, usuario: 1, disciplinaId: 1, nomeDisciplinas: 1 } }"
     })
-    Optional<ProfessorResponseDTO> buscarProfessorComNomeDisciplinas(ObjectId id);
+    Optional<ProfessorResponseDTO> buscarProfessorComNomeDisciplinas(String id);
 }

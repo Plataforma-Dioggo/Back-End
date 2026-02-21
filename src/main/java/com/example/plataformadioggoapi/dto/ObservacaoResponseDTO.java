@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class ObservacaoResponseDTO {
-    private String professor_id;
+    private String professorId;
     private String titulo;
     private String descricao;
     private LocalDate data;
