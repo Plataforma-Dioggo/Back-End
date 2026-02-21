@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class AtividadeNotaResponseDTO {
     private Double nota;
-    private String nome_atividade;
+    private String nomeAtividade;
     private String atribuicao;
 }

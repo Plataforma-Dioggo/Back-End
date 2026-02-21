@@ -8,7 +8,7 @@ public class AtividadeNotaMapper {
     public static AtividadeNota toEntity(AtividadeNotaRequestDTO atividadeNotaRequestDTO) {
         return AtividadeNota.builder()
                 .nota(atividadeNotaRequestDTO.getNota())
-                .nome_atividade(atividadeNotaRequestDTO.getNome_atividade())
+                .nomeAtividade(atividadeNotaRequestDTO.getNomeAtividade())
                 .atribuicao(atividadeNotaRequestDTO.getAtribuicao())
                 .build();
     }
@@ -16,7 +16,7 @@ public class AtividadeNotaMapper {
     public static AtividadeNotaResponseDTO toResponseDTO(AtividadeNota atividadeNota) {
         return AtividadeNotaResponseDTO.builder()
                 .nota(atividadeNota.getNota())
-                .nome_atividade(atividadeNota.getNome_atividade())
+                .nomeAtividade(atividadeNota.getNomeAtividade())
                 .atribuicao(atividadeNota.getAtribuicao())
                 .build();
     }

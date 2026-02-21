@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -12,13 +13,21 @@ import java.util.List;
 @Data
 public class Notas {
     @Id
+    @Field("_id")
     private String id;
     private List<AtividadeNota> notas;
-    private List<Double> nota_n1;
-    private List<Double> nota_n2;
-    private Double media_n1;
-    private Double media_n2;
-    private Double media_final;
-    private String matricula_nota;
-    private String disciplina_id;
+    @Field("nota_n1")
+    private List<Double> notaN1;
+    @Field("nota_n2")
+    private List<Double> notaN2;
+    @Field("media_n1")
+    private Double mediaN1;
+    @Field("media_n2")
+    private Double mediaN2;
+    @Field("media_final")
+    private Double mediaFinal;
+    @Field("matricula_nota")
+    private String matriculaNota;
+    @Field("disciplina_id")
+    private String disciplinaId;
 }

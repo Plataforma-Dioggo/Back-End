@@ -33,11 +33,7 @@ public class DisciplinaController {
     @Operation(summary = "Buscar disciplina por ID", description = "Retorna uma disciplina específica pelo seu ID")
     public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable String id) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
-
-        DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(new ObjectId(id));
+        DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(id);
         return ResponseEntity.ok(disciplina);
     }
 
@@ -55,12 +51,8 @@ public class DisciplinaController {
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
-
         DisciplinaResponseDTO disciplinaAtualizada =
-                disciplinaService.atualizarDisciplina(new ObjectId(id), disciplina);
+                disciplinaService.atualizarDisciplina(id, disciplina);
 
         return ResponseEntity.ok(disciplinaAtualizada);
     }
@@ -77,7 +69,7 @@ public class DisciplinaController {
         }
 
         DisciplinaResponseDTO disciplinaAtualizada =
-                disciplinaService.atualizarParcialDisciplina(new ObjectId(id), disciplina);
+                disciplinaService.atualizarParcialDisciplina(id, disciplina);
 
         return ResponseEntity.ok(disciplinaAtualizada);
     }
@@ -86,11 +78,8 @@ public class DisciplinaController {
     @Operation(summary = "Deletar disciplina", description = "Remove uma disciplina existente pelo seu ID")
     public ResponseEntity<Void> deletarDisciplina(@PathVariable String id) {
 
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
 
-        disciplinaService.deletarDisciplina(new ObjectId(id));
+        disciplinaService.deletarDisciplina(id);
         return ResponseEntity.noContent().build();
     }
 }

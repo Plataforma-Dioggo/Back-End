@@ -5,7 +5,6 @@ import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.mapper.DisciplinaMapper;
 import com.example.plataformadioggoapi.model.Disciplina;
 import com.example.plataformadioggoapi.repository.DisciplinaRepository;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class DisciplinaService {
         return disciplinaRepository.listarDisciplinasComProfessor();
     }
 
-    public DisciplinaResponseDTO buscarPorId(ObjectId id) {
+    public DisciplinaResponseDTO buscarPorId(String id) {
         return disciplinaRepository.buscarDisciplinaComProfessor(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
     }
@@ -39,7 +38,7 @@ public class DisciplinaService {
         return buscarPorId(disciplinaSalva.getId());
     }
 
-    public DisciplinaResponseDTO atualizarDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarDisciplina(String id, DisciplinaRequestDTO disciplina) {
 
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
@@ -51,7 +50,7 @@ public class DisciplinaService {
         return buscarPorId(salva.getId());
     }
 
-    public DisciplinaResponseDTO atualizarParcialDisciplina(ObjectId id, DisciplinaRequestDTO disciplina) {
+    public DisciplinaResponseDTO atualizarParcialDisciplina(String id, DisciplinaRequestDTO disciplina) {
 
         Disciplina disciplinaExistente = disciplinaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
@@ -60,16 +59,12 @@ public class DisciplinaService {
             disciplinaExistente.setNome(disciplina.getNome());
         }
 
-        if (disciplina.getProfessorId() != null && !disciplina.getProfessorId().isBlank()) {
-            disciplinaExistente.setProfessorId(new ObjectId(disciplina.getProfessorId()));
-        }
-
         Disciplina salva = disciplinaRepository.save(disciplinaExistente);
 
         return buscarPorId(salva.getId());
     }
 
-    public void deletarDisciplina(ObjectId id) {
+    public void deletarDisciplina(String id) {
         if (!disciplinaRepository.existsById(id)) {
             throw new RuntimeException("Disciplina de ID " + id + " não encontrada.");
         }

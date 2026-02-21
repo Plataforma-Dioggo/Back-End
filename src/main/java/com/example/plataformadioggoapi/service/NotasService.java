@@ -39,11 +39,11 @@ public class NotasService {
                            NotasRequestDTO request) {
 
         Notas nota = notasRepository
-                .findByMatriculaAndDisciplinaId(matricula, disciplinaId)
+                .findByMatriculaNotaAndDisciplinaId(matricula, disciplinaId)
                 .orElse(
                         Notas.builder()
-                                .matricula_nota(matricula)
-                                .disciplina_id(disciplinaId)
+                                .matriculaNota(matricula)
+                                .disciplinaId(disciplinaId)
                                 .notas(new ArrayList<>())
                                 .build()
                 );
@@ -65,7 +65,7 @@ public class NotasService {
     public List<NotasResponseDTO> buscarBoletim(String matricula) {
 
         List<Notas> notas = notasRepository
-                .findByMatricula(matricula);
+                .findByMatriculaNota(matricula);
 
         return notas.stream()
                 .map(NotasMapper::toResponse)
@@ -76,7 +76,7 @@ public class NotasService {
                                                String disciplinaId) {
 
         Notas nota = notasRepository
-                .findByMatriculaAndDisciplinaId(matricula, disciplinaId)
+                .findByMatriculaNotaAndDisciplinaId(matricula, disciplinaId)
                 .orElseThrow(() ->
                         new NotaNotFoundException("Nota não encontrada"));
 
@@ -102,16 +102,16 @@ public class NotasService {
             }
         }
 
-        nota.setNota_n1(listaN1);
-        nota.setNota_n2(listaN2);
+        nota.setNotaN1(listaN1);
+        nota.setNotaN2(listaN2);
 
         Double mediaN1 = calcularMedia(listaN1);
         Double mediaN2 = calcularMedia(listaN2);
 
-        nota.setMedia_n1(mediaN1);
-        nota.setMedia_n2(mediaN2);
+        nota.setMediaN1(mediaN1);
+        nota.setMediaN2(mediaN2);
 
-        nota.setMedia_final(
+        nota.setMediaFinal(
                 (mediaN1 != null && mediaN2 != null)
                         ? (mediaN1 + mediaN2) / 2
                         : null

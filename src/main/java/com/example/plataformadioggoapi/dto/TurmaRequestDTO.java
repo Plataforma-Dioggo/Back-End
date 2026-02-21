@@ -13,5 +13,5 @@ import java.util.List;
 public class TurmaRequestDTO {
     private String nome;
     private List<AlunoTurma> alunos;
-    private List<String> diciplina_id;
+    private List<String> diciplinaId;
 }

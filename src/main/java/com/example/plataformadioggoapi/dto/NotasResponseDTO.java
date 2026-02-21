@@ -9,9 +9,9 @@ import java.util.List;
 @Builder
 public class NotasResponseDTO {
     private List<AtividadeNotaResponseDTO> atividades;
-    private List<Double> nota_n1;
-    private List<Double> nota_n2;
-    private Double media_n1;
-    private Double media_n2;
-    private Double media_final;
+    private List<Double> notaN1;
+    private List<Double> notaN2;
+    private Double mediaN1;
+    private Double mediaN2;
+    private Double mediaFinal;
 }

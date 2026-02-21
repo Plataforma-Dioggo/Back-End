@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NotasRepository extends MongoRepository<Notas, String> {
-    List<Notas> findByMatricula(String matricula);
+    List<Notas> findByMatriculaNota(String matriculaNota);
 
-    Optional<Notas> findByMatriculaAndDisciplinaId(String matricula, String disciplinaId);
+    Optional<Notas> findByMatriculaNotaAndDisciplinaId(String matriculaNota, String disciplinaId);
 }

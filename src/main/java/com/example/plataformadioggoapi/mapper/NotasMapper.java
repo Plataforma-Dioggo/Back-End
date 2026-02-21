@@ -30,11 +30,11 @@ public class NotasMapper {
 
         return NotasResponseDTO.builder()
                 .atividades(atividades)
-                .nota_n1(nota.getNota_n1())
-                .nota_n2(nota.getNota_n2())
-                .media_n1(nota.getMedia_n1())
-                .media_n2(nota.getMedia_n2())
-                .media_final(nota.getMedia_final())
+                .notaN1(nota.getNotaN1())
+                .notaN2(nota.getNotaN2())
+                .mediaN1(nota.getMediaN1())
+                .mediaN2(nota.getMediaN2())
+                .mediaFinal(nota.getMediaFinal())
                 .build();
     }
 }
