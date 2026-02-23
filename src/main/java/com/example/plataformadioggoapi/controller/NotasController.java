@@ -1,0 +1,48 @@
+package com.example.plataformadioggoapi.controller;
+
+import com.example.plataformadioggoapi.dto.NotasRequestDTO;
+import com.example.plataformadioggoapi.dto.NotasResponseDTO;
+import com.example.plataformadioggoapi.mapper.NotasMapper;
+import com.example.plataformadioggoapi.model.Notas;
+import com.example.plataformadioggoapi.service.NotasService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/notas")
+@RequiredArgsConstructor
+public class NotasController {
+    private final NotasService notasService;
+
+    @PostMapping("/{matricula}/{disciplinaId}")
+    public ResponseEntity<NotasResponseDTO> lancarNota(@PathVariable String matricula, @PathVariable String disciplinaId,
+            @RequestBody NotasRequestDTO request) {
+
+        Notas nota = notasService.lancarNota(matricula, disciplinaId, request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(NotasMapper.toResponse(nota));
+    }
+
+    @GetMapping("/aluno/{matricula}")
+    public ResponseEntity<List<NotasResponseDTO>> buscarBoletim(@PathVariable String matricula) {
+
+        return ResponseEntity.ok(
+                notasService.buscarBoletim(matricula)
+        );
+    }
+
+    @GetMapping("/aluno/{matricula}/disciplina/{disciplinaId}")
+    public ResponseEntity<NotasResponseDTO> buscarPorDisciplina(@PathVariable String matricula,
+            @PathVariable String disciplinaId) {
+
+        return ResponseEntity.ok(
+                notasService.buscarPorDisciplina(matricula, disciplinaId)
+        );
+    }
+}
