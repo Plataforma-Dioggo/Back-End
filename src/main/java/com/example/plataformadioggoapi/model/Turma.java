@@ -23,7 +23,7 @@ public class Turma {
     private String nome;
     private List<AlunoTurma> alunos;
     private Boolean liberarNotas;
-    @Field("diciplina_id")
-    private List<String> diciplinaId;
+    @Field("disciplina_id")
+    private List<String> disciplinaId;
 
 }

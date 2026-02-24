@@ -16,5 +16,5 @@ public class TurmaResponseDTO {
     private String nome;
     private List<AlunoTurma> alunos;
     private Boolean liberarNotas;
-    private List<String> diciplinaId;
+    private List<String> disciplinaId;
 }

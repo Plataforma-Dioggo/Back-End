@@ -37,6 +37,17 @@ public class DisciplinaController {
         return ResponseEntity.ok(disciplina);
     }
 
+    @GetMapping("/listarPorProfessorOuTurma")
+    @Operation(summary = "Listar disciplinas por professor ou turma", description = "Retorna uma lista de disciplinas " +
+            "associadas a um professor ou turma específica")
+    public ResponseEntity<List<DisciplinaResponseDTO>> buscarPorProfessorOuTurma(
+            @RequestParam(required = false) String professorId,
+            @RequestParam(required = false) String turmaId
+    ) {
+        List<DisciplinaResponseDTO> disciplinas = disciplinaService.buscarPorProfessorOuTurma(professorId, turmaId);
+        return ResponseEntity.ok(disciplinas);
+    }
+
     @PostMapping("/criar")
     @Operation(summary = "Criar nova disciplina", description = "Cria uma nova disciplina com os dados fornecidos")
     public ResponseEntity<DisciplinaResponseDTO> criarDisciplina(@RequestBody DisciplinaRequestDTO disciplina) {
