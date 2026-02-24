@@ -27,6 +27,7 @@ public class LoginService {
 
         if (professor != null && passwordEncoder.matches(request.getSenha(), professor.getSenha())) {
             loginResponseDTO = new LoginResponseDTO(
+                    professor.getId(),
                     professor.getNome(),
                     professor.getUsuario(),
                     "PROFESSOR"
@@ -39,6 +40,7 @@ public class LoginService {
 
         if (aluno != null && passwordEncoder.matches(request.getSenha(), aluno.getSenha())) {
             loginResponseDTO = new LoginResponseDTO(
+                    aluno.getId(),
                     aluno.getNome(),
                     aluno.getMatricula(),
                     "ALUNO"
