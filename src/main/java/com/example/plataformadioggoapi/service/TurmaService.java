@@ -8,6 +8,7 @@ import com.example.plataformadioggoapi.model.Turma;
 import com.example.plataformadioggoapi.repository.TurmaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,10 +17,13 @@ public class TurmaService {
 
     private final TurmaRepository turmaRepository;
 
+    private final DisciplinaService disciplinaService;
+
     private final TurmaMapper turmaMapper;
 
-    public TurmaService(TurmaRepository turmaRepository, TurmaMapper turmaMapper) {
+    public TurmaService(TurmaRepository turmaRepository, DisciplinaService disciplinaService, TurmaMapper turmaMapper) {
         this.turmaRepository = turmaRepository;
+        this.disciplinaService = disciplinaService;
         this.turmaMapper = turmaMapper;
     }
 
@@ -76,5 +80,21 @@ public class TurmaService {
         return turmaRepository.findByNome(nomeTurma);
     }
 
+    public List<TurmaResponseDTO> ListarIdprofessor (String idProfessor){
+        List<String> disciplinasIds = disciplinaService.retornarIdDiciplina(idProfessor);
+        List<TurmaResponseDTO> list = listarTurmas();
+        List<TurmaResponseDTO> response = new ArrayList<>();
+        for (TurmaResponseDTO turma: list){
+            if (turma.getDiciplinaId() != null) {
+                for (String disciplinaIdTurma : turma.getDiciplinaId()) {
+                    if (disciplinasIds.contains(disciplinaIdTurma)) {
+                        response.add(turma);
+                        break;
+                    }
+                }
+            }
+        }
+        return response;
+    }
 
 }

@@ -4,6 +4,7 @@ import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.model.Disciplina;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,5 +38,8 @@ public interface DisciplinaRepository extends MongoRepository<Disciplina, String
     })
     Optional<DisciplinaResponseDTO> buscarDisciplinaComProfessor(String id);
 
+    @Query("{ 'professor_id': ?0 }")
+    List<Disciplina> findDisciplinaByProfessorId(ObjectId professorId);
+  
     List<DisciplinaResponseDTO> findByProfessorId(String id);
 }
