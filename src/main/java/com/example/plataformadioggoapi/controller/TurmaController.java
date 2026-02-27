@@ -69,4 +69,9 @@ public class TurmaController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/listar-idProfessor")
+    public ResponseEntity<List<TurmaResponseDTO>> listarIdProfessor(String idProfessor){
+        return ResponseEntity.ok(turmaService.ListarIdprofessor(idProfessor));
+    }
+
 }

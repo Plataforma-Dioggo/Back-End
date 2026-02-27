@@ -5,8 +5,10 @@ import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.mapper.DisciplinaMapper;
 import com.example.plataformadioggoapi.model.Disciplina;
 import com.example.plataformadioggoapi.repository.DisciplinaRepository;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -69,5 +71,15 @@ public class DisciplinaService {
             throw new RuntimeException("Disciplina de ID " + id + " não encontrada.");
         }
         disciplinaRepository.deleteById(id);
+    }
+
+    public List<String> retornarIdDiciplina (String idProfessor){
+        ObjectId professorObjectId = new ObjectId(idProfessor);
+        List<Disciplina> response = disciplinaRepository.findDisciplinaByProfessorId(professorObjectId);
+        List<String> listResponse = new ArrayList<>();
+        for (Disciplina disciplina : response){
+            listResponse.add(disciplina.getId());
+        }
+        return listResponse;
     }
 }
