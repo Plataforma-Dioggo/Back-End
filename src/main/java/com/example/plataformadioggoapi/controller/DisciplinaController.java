@@ -1,7 +1,9 @@
 package com.example.plataformadioggoapi.controller;
 
+import com.example.plataformadioggoapi.dto.DisciplinaProfessorResponseDTO;
 import com.example.plataformadioggoapi.dto.DisciplinaRequestDTO;
 import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
+import com.example.plataformadioggoapi.model.Disciplina;
 import com.example.plataformadioggoapi.service.DisciplinaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,27 +26,27 @@ public class DisciplinaController {
 
     @GetMapping("/listar")
     @Operation(summary = "Listar todas as disciplinas", description = "Retorna uma lista de todas as disciplinas cadastradas")
-    public ResponseEntity<List<DisciplinaResponseDTO>> listarDisciplinas() {
-        List<DisciplinaResponseDTO> disciplinas = disciplinaService.listarDisciplinas();
+    public ResponseEntity<List<DisciplinaProfessorResponseDTO>> listarDisciplinas() {
+        List<DisciplinaProfessorResponseDTO> disciplinas = disciplinaService.listarDisciplinas();
         return ResponseEntity.ok(disciplinas);
     }
 
     @GetMapping("/listarPorId/{id}")
     @Operation(summary = "Buscar disciplina por ID", description = "Retorna uma disciplina específica pelo seu ID")
-    public ResponseEntity<DisciplinaResponseDTO> buscarPorId(@PathVariable String id) {
+    public ResponseEntity<DisciplinaProfessorResponseDTO> buscarPorId(@PathVariable String id) {
 
-        DisciplinaResponseDTO disciplina = disciplinaService.buscarPorId(id);
+        DisciplinaProfessorResponseDTO disciplina = disciplinaService.buscarPorId(id);
         return ResponseEntity.ok(disciplina);
     }
 
     @GetMapping("/listarPorProfessorOuTurma")
     @Operation(summary = "Listar disciplinas por professor ou turma", description = "Retorna uma lista de disciplinas " +
             "associadas a um professor ou turma específica")
-    public ResponseEntity<List<DisciplinaResponseDTO>> buscarPorProfessorOuTurma(
+    public ResponseEntity<List<DisciplinaProfessorResponseDTO>> buscarPorProfessorOuTurma(
             @RequestParam(required = false) String professorId,
             @RequestParam(required = false) String turmaId
     ) {
-        List<DisciplinaResponseDTO> disciplinas = disciplinaService.buscarPorProfessorOuTurma(professorId, turmaId);
+        List<DisciplinaProfessorResponseDTO> disciplinas = disciplinaService.buscarPorProfessorOuTurma(professorId, turmaId);
         return ResponseEntity.ok(disciplinas);
     }
 
@@ -74,10 +76,6 @@ public class DisciplinaController {
             @PathVariable String id,
             @RequestBody DisciplinaRequestDTO disciplina
     ) {
-
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
 
         DisciplinaResponseDTO disciplinaAtualizada =
                 disciplinaService.atualizarParcialDisciplina(id, disciplina);

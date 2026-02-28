@@ -2,6 +2,7 @@ package com.example.plataformadioggoapi.controller;
 
 import com.example.plataformadioggoapi.dto.TurmaRequestDTO;
 import com.example.plataformadioggoapi.dto.TurmaResponseDTO;
+import com.example.plataformadioggoapi.model.Turma;
 import com.example.plataformadioggoapi.service.TurmaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,10 +60,10 @@ public class TurmaController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping
-    @Operation(summary = "Apagar turma")
-    public ResponseEntity<Boolean> apagarTurma(String nomeTurma){
-        Boolean response = turmaService.apagarTurma(nomeTurma);
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Apagar turma pelo ID")
+    public ResponseEntity<Boolean> apagarTurma(@PathVariable String id) {
+        Boolean response = turmaService.apagarTurma(id);
         if (response) {
             return ResponseEntity.ok().build();
         }
@@ -72,6 +73,12 @@ public class TurmaController {
     @GetMapping("/listar-idProfessor")
     public ResponseEntity<List<TurmaResponseDTO>> listarIdProfessor(String idProfessor){
         return ResponseEntity.ok(turmaService.ListarIdprofessor(idProfessor));
+    }
+
+    @PatchMapping("/{nomeTurma}/alterarLiberacaoNotas")
+    public ResponseEntity<Void> liberarNotas(@PathVariable String nomeTurma) {
+        turmaService.alternarLiberacaoNotas(nomeTurma);
+        return ResponseEntity.ok().build();
     }
 
 }

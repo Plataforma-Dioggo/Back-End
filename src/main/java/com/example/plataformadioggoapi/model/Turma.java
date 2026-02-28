@@ -18,7 +18,6 @@ import java.util.List;
 public class Turma {
 
     @Id
-    @Field("_id")
     private String id;
     private String nome;
     private List<AlunoTurma> alunos;
