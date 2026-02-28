@@ -5,6 +5,7 @@ import com.example.plataformadioggoapi.dto.ProfessorResponseDTO;
 import com.example.plataformadioggoapi.mapper.ProfessorMapper;
 import com.example.plataformadioggoapi.model.Professor;
 import com.example.plataformadioggoapi.repository.ProfessorRepository;
+import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +29,18 @@ public class ProfessorService {
     }
 
     public List<ProfessorResponseDTO> listarProfessores() {
-        return professorRepository.listarProfessoresComNomeDisciplinas();
+        List<Professor> professores = professorRepository.findAll();
+        return professorMapper.toDTOList(professores);
     }
 
     public ProfessorResponseDTO buscarPorId(String id) {
-        return professorRepository.buscarProfessorComNomeDisciplinas(id)
-                .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
+
+        ObjectId objectId = new ObjectId(id);
+
+        Professor professor = professorRepository.findById(objectId)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        return professorMapper.toDTO(professor);
     }
 
     public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO dto) {

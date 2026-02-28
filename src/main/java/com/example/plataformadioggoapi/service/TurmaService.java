@@ -85,8 +85,8 @@ public class TurmaService {
         List<TurmaResponseDTO> list = listarTurmas();
         List<TurmaResponseDTO> response = new ArrayList<>();
         for (TurmaResponseDTO turma: list){
-            if (turma.getDiciplinaId() != null) {
-                for (String disciplinaIdTurma : turma.getDiciplinaId()) {
+            if (turma.getDisciplinaId() != null) {
+                for (String disciplinaIdTurma : turma.getDisciplinaId()) {
                     if (disciplinasIds.contains(disciplinaIdTurma)) {
                         response.add(turma);
                         break;

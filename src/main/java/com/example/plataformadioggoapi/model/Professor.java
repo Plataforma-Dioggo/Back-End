@@ -17,7 +17,6 @@ import java.util.List;
 public class Professor {
 
     @Id
-    @Field("_id")
     private String id;
 
     private String nome;
