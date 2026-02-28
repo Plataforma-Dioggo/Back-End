@@ -35,7 +35,10 @@ public class DisciplinaService {
     }
 
     public DisciplinaResponseDTO buscarPorId(String id) {
-        return disciplinaRepository.buscarDisciplinaComProfessor(id)
+
+        ObjectId objectId = new ObjectId(id);
+
+        return disciplinaRepository.buscarDisciplinaComProfessor(objectId)
                 .orElseThrow(() -> new RuntimeException("Disciplina de ID " + id + " não encontrada."));
     }
 

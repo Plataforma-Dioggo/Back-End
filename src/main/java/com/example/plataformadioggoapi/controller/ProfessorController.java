@@ -5,7 +5,6 @@ import com.example.plataformadioggoapi.dto.ProfessorResponseDTO;
 import com.example.plataformadioggoapi.service.ProfessorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,10 +30,6 @@ public class ProfessorController {
     @GetMapping("/listarPorId/{id}")
     @Operation(summary = "Buscar professor por ID", description = "Retorna um professor específico pelo seu ID")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(@PathVariable String id) {
-
-        if (!ObjectId.isValid(id)) {
-            throw new RuntimeException("ID inválido.");
-        }
 
         return ResponseEntity.ok(professorService.buscarPorId(id));
     }

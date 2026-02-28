@@ -24,7 +24,4 @@ public class ProfessorResponseDTO {
 
     @Schema(description = "IDs das disciplinas associadas", example = "[\"65f1a9c2d3e4f56789ab0123\"]")
     private List<String> disciplinaId;
-
-    @Schema(description = "Nomes das disciplinas associadas", example = "[\"Matemática\", \"Física\"]")
-    private List<String> nomeDisciplinas;
 }

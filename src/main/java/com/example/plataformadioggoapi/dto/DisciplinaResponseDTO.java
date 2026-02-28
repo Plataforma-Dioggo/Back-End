@@ -2,6 +2,7 @@ package com.example.plataformadioggoapi.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class DisciplinaResponseDTO {
     private String nome;
 
     @Schema(description = "ID do professor", example = "65f1a9c2d3e4f56789ab0123")
+    @Field("professor_id_string")
     private String professorId;
 
     @Schema(description = "Nome do professor", example = "João Silva")

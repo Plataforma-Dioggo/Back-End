@@ -10,7 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProfessorMapper {
 
-    @Mapping(target = "nomeDisciplinas", ignore = true)
     ProfessorResponseDTO toDTO(Professor professor);
 
     List<ProfessorResponseDTO> toDTOList(List<Professor> professores);
