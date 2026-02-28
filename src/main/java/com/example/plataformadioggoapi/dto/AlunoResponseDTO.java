@@ -10,4 +10,5 @@ public class AlunoResponseDTO {
     private String nome;
     private String matricula;
     private String email;
+    private String turmaId;
 }
