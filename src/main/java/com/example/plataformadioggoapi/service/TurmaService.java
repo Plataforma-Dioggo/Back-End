@@ -54,7 +54,7 @@ public class TurmaService {
                 break;
             }
         }
-        
+
         if (alunoParaRemover != null) {
             turma.getAlunos().remove(alunoParaRemover);
             turmaRepository.save(turma);
@@ -70,14 +70,20 @@ public class TurmaService {
         return true;
     }
 
-    public Boolean apagarTurma(String nomeTurma){
-        Turma turma = ListarTurmasPorNome(nomeTurma);
-        turmaRepository.delete(turma);
-        return true;
+    public Boolean apagarTurma(String id) {
+        if (turmaRepository.existsById(id)) {
+            turmaRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public Turma ListarTurmasPorNome(String nomeTurma) {
-        return turmaRepository.findByNome(nomeTurma);
+        Turma turma = turmaRepository.findByNome(nomeTurma);
+        if (turma == null) {
+            throw new RuntimeException("Turma não encontrada: " + nomeTurma);
+        }
+        return turma;
     }
 
     public List<TurmaResponseDTO> ListarIdprofessor (String idProfessor){
@@ -95,6 +101,24 @@ public class TurmaService {
             }
         }
         return response;
+    }
+
+    public Boolean alternarLiberacaoNotas(String nomeTurma) {
+            Turma turma = ListarTurmasPorNome(nomeTurma);
+
+        if (turma == null) {
+            throw new RuntimeException("Turma não encontrada: " + nomeTurma);
+        }
+
+        turma.setLiberarNotas(!turma.getLiberarNotas());
+
+        if (turma.getId() == null || turma.getId().isEmpty()) {
+            throw new RuntimeException("ID da turma não pode ser nulo");
+        }
+
+        Turma turmaSalva = turmaRepository.save(turma);
+
+        return turmaSalva.getLiberarNotas();
     }
 
 }

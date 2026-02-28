@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 public class Admin {
     @Id
-    @Field("_id")
     private String id;
     private String email;
     private String senha;

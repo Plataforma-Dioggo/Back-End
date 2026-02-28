@@ -1,5 +1,6 @@
 package com.example.plataformadioggoapi.repository;
 
+import com.example.plataformadioggoapi.dto.DisciplinaProfessorResponseDTO;
 import com.example.plataformadioggoapi.dto.DisciplinaResponseDTO;
 import com.example.plataformadioggoapi.model.Disciplina;
 import org.bson.types.ObjectId;
@@ -23,7 +24,7 @@ public interface DisciplinaRepository extends MongoRepository<Disciplina, String
                     "\"professorUsuario\": \"$professorInfo.usuario\" " +
                     "} }"
     })
-    List<DisciplinaResponseDTO> listarDisciplinasComProfessor();
+    List<DisciplinaProfessorResponseDTO> listarDisciplinasComProfessor();
 
     @Aggregation(pipeline = {
             "{ $match: { _id: ?0 } }",
@@ -37,10 +38,10 @@ public interface DisciplinaRepository extends MongoRepository<Disciplina, String
                     "\"professorUsuario\": \"$professorInfo.usuario\" " +
                     "} }"
     })
-    Optional<DisciplinaResponseDTO> buscarDisciplinaComProfessor(ObjectId id);
+    Optional<DisciplinaProfessorResponseDTO> buscarDisciplinaComProfessor(ObjectId id);
 
     @Query("{ 'professor_id': ?0 }")
     List<Disciplina> findDisciplinaByProfessorId(ObjectId professorId);
   
-    List<DisciplinaResponseDTO> findByProfessorId(String id);
+    List<DisciplinaProfessorResponseDTO> findByProfessorId(String id);
 }

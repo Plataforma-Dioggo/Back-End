@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 public class Notas {
     @Id
-    @Field("_id")
     private String id;
     private List<AtividadeNota> notas;
     @Field("nota_n1")

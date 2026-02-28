@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 public class Aluno {
     @Id
-    @Field("_id")
     private String id;
     private String matricula;
     private String nome;
