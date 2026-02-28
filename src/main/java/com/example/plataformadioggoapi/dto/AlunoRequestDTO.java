@@ -8,4 +8,5 @@ public class AlunoRequestDTO {
     private String matricula;
     private String email;
     private String senha;
+    private String turmaId;
 }

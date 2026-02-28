@@ -21,7 +21,7 @@ public class Aluno {
     private String senha;
     private List<Observacao> observacoes;
     @Field("turma_id")
-    private String turma_id;
+    private String turmaId;
     @Field("usou_sistema")
-    private Boolean usou_sistema;
+    private Boolean usouSistema;
 }

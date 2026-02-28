@@ -11,6 +11,7 @@ public class AlunoMapper {
                 .nome(alunoRequestDTO.getNome())
                 .email(alunoRequestDTO.getEmail())
                 .senha(alunoRequestDTO.getSenha())
+                .turmaId(alunoRequestDTO.getTurmaId())
                 .build();
     }
 
@@ -20,6 +21,7 @@ public class AlunoMapper {
                 .matricula(aluno.getMatricula())
                 .nome(aluno.getNome())
                 .email(aluno.getEmail())
+                .turmaId(aluno.getTurmaId())
                 .build();
     }
 }
