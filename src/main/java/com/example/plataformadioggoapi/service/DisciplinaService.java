@@ -9,11 +9,11 @@ import com.example.plataformadioggoapi.model.Disciplina;
 import com.example.plataformadioggoapi.model.Turma;
 import com.example.plataformadioggoapi.repository.DisciplinaRepository;
 import com.example.plataformadioggoapi.repository.TurmaRepository;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DisciplinaService {
@@ -40,7 +40,10 @@ public class DisciplinaService {
     }
 
     public DisciplinaProfessorResponseDTO buscarPorId(String id) {
-        return disciplinaRepository.buscarDisciplinaComProfessor(id)
+
+        ObjectId objectId = new ObjectId(id);
+
+        return disciplinaRepository.buscarDisciplinaComProfessor(objectId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Disciplina de ID " + id + " não encontrada."));
     }
