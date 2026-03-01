@@ -10,37 +10,88 @@ import com.example.plataformadioggoapi.mapper.ObservacaoMapper;
 import com.example.plataformadioggoapi.model.Aluno;
 import com.example.plataformadioggoapi.model.Observacao;
 import com.example.plataformadioggoapi.repository.AlunoRepository;
+import com.example.plataformadioggoapi.repository.ProfessorRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AlunoService {
 
     private final AlunoRepository alunoRepository;
+    private final ProfessorRepository professorRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AlunoService(AlunoRepository alunoRepository, PasswordEncoder passwordEncoder) {
+    public AlunoService(AlunoRepository alunoRepository,
+                        ProfessorRepository professorRepository,
+                        PasswordEncoder passwordEncoder) {
         this.alunoRepository = alunoRepository;
+        this.professorRepository = professorRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    private AlunoResponseDTO montarAlunoResponseCompleto(Aluno aluno) {
+
+        List<ObservacaoResponseDTO> observacoesDTO = new ArrayList<>();
+
+        if (aluno.getObservacoes() != null) {
+            observacoesDTO = aluno.getObservacoes()
+                    .stream()
+                    .map(observacao -> {
+
+                        var professor = professorRepository
+                                .findById(observacao.getProfessorId())
+                                .orElse(null);
+
+                        String nome = professor != null ? professor.getNome() : null;
+                        String usuario = professor != null ? professor.getUsuario() : null;
+
+                        return ObservacaoMapper.toResponseDTO(
+                                observacao,
+                                nome,
+                                usuario
+                        );
+                    })
+                    .toList();
+        }
+
+        return AlunoResponseDTO.builder()
+                .id(aluno.getId())
+                .nome(aluno.getNome())
+                .matricula(aluno.getMatricula())
+                .email(aluno.getEmail())
+                .usouSistema(aluno.getUsouSistema())
+                .turmaId(aluno.getTurmaId())
+                .observacoes(observacoesDTO)
+                .build();
+    }
+
     public List<AlunoResponseDTO> listarAlunos() {
-        List<Aluno> alunos = alunoRepository.findAll();
-        return alunos.stream().map(AlunoMapper::toResponseDTO).toList();
+        return alunoRepository.findAll()
+                .stream()
+                .map(this::montarAlunoResponseCompleto)
+                .toList();
     }
 
-    public Aluno cadastrarAluno(AlunoRequestDTO aluno) {
-        Aluno entity = AlunoMapper.toEntity(aluno);
-        entity.setSenha(passwordEncoder.encode(aluno.getSenha()));
-        return alunoRepository.save(entity);
+    public AlunoResponseDTO cadastrarAluno(AlunoRequestDTO alunoDTO) {
+
+        Aluno entity = AlunoMapper.toEntity(alunoDTO);
+        entity.setSenha(passwordEncoder.encode(alunoDTO.getSenha()));
+
+        Aluno salvo = alunoRepository.save(entity);
+
+        return montarAlunoResponseCompleto(salvo);
     }
 
-    public Optional<Aluno> buscarPorMatricula(String matricula) {
-        return alunoRepository.findByMatricula(matricula);
+    public AlunoResponseDTO buscarPorMatricula(String matricula) {
+
+        Aluno aluno = alunoRepository.findByMatricula(matricula)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Aluno não encontrado"));
+
+        return montarAlunoResponseCompleto(aluno);
     }
 
     public AlunoResponseDTO editarAluno(String matricula, AlunoRequestDTO alunoDTO) {
@@ -62,8 +113,9 @@ public class AlunoService {
             alunoEditado.setTurmaId(alunoDTO.getTurmaId());
         }
 
-        Aluno alunoSalvo = alunoRepository.save(alunoEditado);
-        return AlunoMapper.toResponseDTO(alunoSalvo);
+        Aluno salvo = alunoRepository.save(alunoEditado);
+
+        return montarAlunoResponseCompleto(salvo);
     }
 
     public AlunoResponseDTO excluirAluno(String matricula) {
@@ -73,7 +125,8 @@ public class AlunoService {
                         new EntityNotFoundException("Aluno não encontrado"));
 
         alunoRepository.delete(aluno);
-        return AlunoMapper.toResponseDTO(aluno);
+
+        return montarAlunoResponseCompleto(aluno);
     }
 
     public void adicionarObservacao(String matricula, ObservacaoRequestDTO request) {
@@ -82,8 +135,7 @@ public class AlunoService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("Aluno não encontrado"));
 
-        Observacao observacao =
-                ObservacaoMapper.toEntity(request);
+        Observacao observacao = ObservacaoMapper.toEntity(request);
 
         if (aluno.getObservacoes() == null) {
             aluno.setObservacoes(new ArrayList<>());
@@ -94,18 +146,6 @@ public class AlunoService {
     }
 
     public List<ObservacaoResponseDTO> listarObservacoes(String matricula) {
-
-        Aluno aluno = alunoRepository.findByMatricula(matricula)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Aluno não encontrado"));
-
-        if (aluno.getObservacoes() == null) {
-            return new ArrayList<>();
-        }
-
-        return aluno.getObservacoes()
-                .stream()
-                .map(ObservacaoMapper::toResponseDTO)
-                .toList();
+        return buscarPorMatricula(matricula).getObservacoes();
     }
 }

@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Builder
 public class ObservacaoResponseDTO {
     private String professorId;
+    private String professorNome;
+    private String professorUsuario;
     private String titulo;
     private String descricao;
     private LocalDate data;

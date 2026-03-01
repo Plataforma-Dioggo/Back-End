@@ -79,7 +79,7 @@ public class NotasService {
             throw new BadRequestException("Matrícula é obrigatória.");
         }
 
-        List<Notas> notas = notasRepository.findByMatriculaNota(matricula);
+        List<Notas> notas = notasRepository.findAllByMatriculaNota(matricula);
 
         return notas.stream()
                 .map(NotasMapper::toResponse)
@@ -105,10 +105,10 @@ public class NotasService {
         return NotasMapper.toResponse(nota);
     }
 
-    public void excluirAtividade(String id, String nomeAtividade) {
+    public void excluirAtividade(String matricula, String nomeAtividade) {
 
         Notas nota = notasRepository
-                .findById(id)
+                .findByMatriculaNota(matricula)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Nota não encontrada"));
 
