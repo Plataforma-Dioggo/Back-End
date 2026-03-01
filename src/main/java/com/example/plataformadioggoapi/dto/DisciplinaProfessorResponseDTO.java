@@ -19,7 +19,7 @@ public class DisciplinaProfessorResponseDTO {
     private String nome;
 
     @Schema(description = "ID do professor", example = "65f1a9c2d3e4f56789ab0123")
-    @Field("professor_id_string")
+    @Field("professor_id")
     private String professorId;
 
     @Schema(description = "Nome do professor", example = "João Silva")

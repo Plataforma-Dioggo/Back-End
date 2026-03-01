@@ -2,10 +2,11 @@ package com.example.plataformadioggoapi.service;
 
 import com.example.plataformadioggoapi.dto.ProfessorRequestDTO;
 import com.example.plataformadioggoapi.dto.ProfessorResponseDTO;
+import com.example.plataformadioggoapi.exception.BadRequestException;
+import com.example.plataformadioggoapi.exception.EntityNotFoundException;
 import com.example.plataformadioggoapi.mapper.ProfessorMapper;
 import com.example.plataformadioggoapi.model.Professor;
 import com.example.plataformadioggoapi.repository.ProfessorRepository;
-import org.bson.types.ObjectId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,10 +36,9 @@ public class ProfessorService {
 
     public ProfessorResponseDTO buscarPorId(String id) {
 
-        ObjectId objectId = new ObjectId(id);
-
-        Professor professor = professorRepository.findById(objectId)
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+        Professor professor = professorRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Professor não encontrado"));
 
         return professorMapper.toDTO(professor);
     }
@@ -46,15 +46,15 @@ public class ProfessorService {
     public ProfessorResponseDTO criarProfessor(ProfessorRequestDTO dto) {
 
         if (dto.getNome() == null || dto.getNome().isBlank()) {
-            throw new RuntimeException("O nome é obrigatório.");
+            throw new BadRequestException("O nome é obrigatório.");
         }
 
         if (dto.getUsuario() == null || dto.getUsuario().isBlank()) {
-            throw new RuntimeException("O usuário é obrigatório.");
+            throw new BadRequestException("O usuário é obrigatório.");
         }
 
         if (dto.getSenha() == null || dto.getSenha().isBlank()) {
-            throw new RuntimeException("A senha é obrigatória.");
+            throw new BadRequestException("A senha é obrigatória.");
         }
 
         dto.setSenha(passwordEncoder.encode(dto.getSenha()));
@@ -69,7 +69,8 @@ public class ProfessorService {
     public ProfessorResponseDTO atualizarProfessor(String id, ProfessorRequestDTO dto) {
 
         Professor existente = professorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Professor de ID " + id + " não encontrado."));
 
         if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
             dto.setSenha(passwordEncoder.encode(dto.getSenha()));
@@ -87,7 +88,8 @@ public class ProfessorService {
     public ProfessorResponseDTO atualizarParcialProfessor(String id, ProfessorRequestDTO dto) {
 
         Professor existente = professorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Professor de ID " + id + " não encontrado."));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Professor de ID " + id + " não encontrado."));
 
         if (dto.getNome() != null && !dto.getNome().isBlank()) {
             existente.setNome(dto.getNome());
@@ -101,15 +103,21 @@ public class ProfessorService {
             existente.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
 
+        if (dto.getDisciplinaId() != null) {
+            existente.setDisciplinaId(dto.getDisciplinaId());
+        }
+
         Professor salvo = professorRepository.save(existente);
 
         return buscarPorId(salvo.getId());
     }
 
     public void deletarProfessor(String id) {
+
         if (!professorRepository.existsById(id)) {
-            throw new RuntimeException("Professor de ID " + id + " não encontrado.");
+            throw new EntityNotFoundException("Professor de ID " + id + " não encontrado.");
         }
+
         professorRepository.deleteById(id);
     }
 }

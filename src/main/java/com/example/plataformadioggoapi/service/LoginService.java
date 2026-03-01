@@ -2,6 +2,8 @@ package com.example.plataformadioggoapi.service;
 
 import com.example.plataformadioggoapi.dto.LoginRequestDTO;
 import com.example.plataformadioggoapi.dto.LoginResponseDTO;
+import com.example.plataformadioggoapi.exception.BadRequestException;
+import com.example.plataformadioggoapi.exception.UnauthorizedException;
 import com.example.plataformadioggoapi.model.Aluno;
 import com.example.plataformadioggoapi.model.Professor;
 import com.example.plataformadioggoapi.repository.AlunoRepository;
@@ -19,14 +21,23 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponseDTO login(LoginRequestDTO request) {
-        LoginResponseDTO loginResponseDTO = null;
+
+        if (request.getUsuario() == null || request.getUsuario().isBlank()) {
+            throw new BadRequestException("Usuário é obrigatório.");
+        }
+
+        if (request.getSenha() == null || request.getSenha().isBlank()) {
+            throw new BadRequestException("Senha é obrigatória.");
+        }
 
         Professor professor = professorRepository
                 .findByUsuario(request.getUsuario())
                 .orElse(null);
 
-        if (professor != null && passwordEncoder.matches(request.getSenha(), professor.getSenha())) {
-            loginResponseDTO = new LoginResponseDTO(
+        if (professor != null &&
+                passwordEncoder.matches(request.getSenha(), professor.getSenha())) {
+
+            return new LoginResponseDTO(
                     professor.getId(),
                     professor.getNome(),
                     professor.getUsuario(),
@@ -38,8 +49,10 @@ public class LoginService {
                 .findByMatricula(request.getUsuario())
                 .orElse(null);
 
-        if (aluno != null && passwordEncoder.matches(request.getSenha(), aluno.getSenha())) {
-            loginResponseDTO = new LoginResponseDTO(
+        if (aluno != null &&
+                passwordEncoder.matches(request.getSenha(), aluno.getSenha())) {
+
+            return new LoginResponseDTO(
                     aluno.getId(),
                     aluno.getNome(),
                     aluno.getMatricula(),
@@ -47,6 +60,6 @@ public class LoginService {
             );
         }
 
-        return loginResponseDTO;
+        throw new UnauthorizedException("Usuário ou senha inválidos.");
     }
 }

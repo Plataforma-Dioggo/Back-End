@@ -14,4 +14,5 @@ public class NotasResponseDTO {
     private Double mediaN1;
     private Double mediaN2;
     private Double mediaFinal;
+    private String disciplinaId;
 }

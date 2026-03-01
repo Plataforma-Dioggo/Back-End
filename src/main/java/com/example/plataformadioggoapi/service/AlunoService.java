@@ -4,6 +4,7 @@ import com.example.plataformadioggoapi.dto.AlunoRequestDTO;
 import com.example.plataformadioggoapi.dto.AlunoResponseDTO;
 import com.example.plataformadioggoapi.dto.ObservacaoRequestDTO;
 import com.example.plataformadioggoapi.dto.ObservacaoResponseDTO;
+import com.example.plataformadioggoapi.exception.EntityNotFoundException;
 import com.example.plataformadioggoapi.mapper.AlunoMapper;
 import com.example.plataformadioggoapi.mapper.ObservacaoMapper;
 import com.example.plataformadioggoapi.model.Aluno;
@@ -43,8 +44,10 @@ public class AlunoService {
     }
 
     public AlunoResponseDTO editarAluno(String matricula, AlunoRequestDTO alunoDTO) {
+
         Aluno alunoEditado = alunoRepository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Aluno não encontrado"));
 
         if (alunoDTO.getNome() != null) {
             alunoEditado.setNome(alunoDTO.getNome());
@@ -64,18 +67,23 @@ public class AlunoService {
     }
 
     public AlunoResponseDTO excluirAluno(String matricula) {
+
         Aluno aluno = alunoRepository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Aluno não encontrado"));
 
         alunoRepository.delete(aluno);
         return AlunoMapper.toResponseDTO(aluno);
     }
 
     public void adicionarObservacao(String matricula, ObservacaoRequestDTO request) {
-        Aluno aluno = alunoRepository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
 
-        Observacao observacao = ObservacaoMapper.toEntity(request, "PROFESSOR_ID_AQUI");
+        Aluno aluno = alunoRepository.findByMatricula(matricula)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Aluno não encontrado"));
+
+        Observacao observacao =
+                ObservacaoMapper.toEntity(request, "PROFESSOR_ID_AQUI");
 
         if (aluno.getObservacoes() == null) {
             aluno.setObservacoes(new ArrayList<>());
@@ -86,8 +94,10 @@ public class AlunoService {
     }
 
     public List<ObservacaoResponseDTO> listarObservacoes(String matricula) {
+
         Aluno aluno = alunoRepository.findByMatricula(matricula)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Aluno não encontrado"));
 
         if (aluno.getObservacoes() == null) {
             return new ArrayList<>();

@@ -45,4 +45,13 @@ public class NotasController {
                 notasService.buscarPorDisciplina(matricula, disciplinaId)
         );
     }
+
+    @DeleteMapping("/{matricula}/{nomeAtividade}")
+    public ResponseEntity<Void> excluirNota(
+            @PathVariable String matricula,
+            @PathVariable String nomeAtividade
+    ) {
+        notasService.excluirAtividade(matricula, nomeAtividade);
+        return ResponseEntity.noContent().build();
+    }
 }
