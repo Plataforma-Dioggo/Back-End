@@ -2,6 +2,7 @@ package com.example.plataformadioggoapi.repository;
 
 import com.example.plataformadioggoapi.dto.DisciplinaProfessorResponseDTO;
 import com.example.plataformadioggoapi.model.Disciplina;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -25,7 +26,7 @@ public interface DisciplinaRepository extends MongoRepository<Disciplina, String
     List<DisciplinaProfessorResponseDTO> listarDisciplinasComProfessor();
 
     @Aggregation(pipeline = {
-            "{ $match: { _id: { $toObjectId: ?0 } } }",
+            "{ $match: { _id: ?0 } }",
             "{ $addFields: { professorIdObj: { $toObjectId: '$professor_id' } } }",
             "{ $lookup: { from: 'professores', localField: 'professorIdObj', foreignField: '_id', as: 'professorInfo' } }",
             "{ $unwind: { path: '$professorInfo', preserveNullAndEmptyArrays: true } }",
@@ -37,7 +38,7 @@ public interface DisciplinaRepository extends MongoRepository<Disciplina, String
                     "professorUsuario: '$professorInfo.usuario' " +
                     "} }"
     })
-    Optional<DisciplinaProfessorResponseDTO> buscarDisciplinaComProfessor(String id);
+    Optional<DisciplinaProfessorResponseDTO> buscarDisciplinaComProfessor(ObjectId id);
 
     List<DisciplinaProfessorResponseDTO> findByProfessorId(String professorId);
 
