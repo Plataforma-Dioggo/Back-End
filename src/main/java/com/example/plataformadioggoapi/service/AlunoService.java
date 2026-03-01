@@ -83,7 +83,7 @@ public class AlunoService {
                         new EntityNotFoundException("Aluno não encontrado"));
 
         Observacao observacao =
-                ObservacaoMapper.toEntity(request, "PROFESSOR_ID_AQUI");
+                ObservacaoMapper.toEntity(request);
 
         if (aluno.getObservacoes() == null) {
             aluno.setObservacoes(new ArrayList<>());
