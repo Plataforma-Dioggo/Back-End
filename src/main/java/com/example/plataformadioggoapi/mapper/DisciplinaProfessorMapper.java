@@ -8,7 +8,5 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DisciplinaProfessorMapper {
-
-
     List<DisciplinaProfessorResponseDTO> toDTOList(List<Disciplina> disciplinas);
 }

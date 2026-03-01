@@ -35,6 +35,7 @@ public class NotasMapper {
                 .mediaN1(nota.getMediaN1())
                 .mediaN2(nota.getMediaN2())
                 .mediaFinal(nota.getMediaFinal())
+                .disciplinaId(nota.getDisciplinaId())
                 .build();
     }
 }

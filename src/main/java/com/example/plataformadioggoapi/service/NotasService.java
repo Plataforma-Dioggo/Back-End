@@ -2,7 +2,8 @@ package com.example.plataformadioggoapi.service;
 
 import com.example.plataformadioggoapi.dto.NotasRequestDTO;
 import com.example.plataformadioggoapi.dto.NotasResponseDTO;
-import com.example.plataformadioggoapi.exception.NotaNotFoundException;
+import com.example.plataformadioggoapi.exception.BadRequestException;
+import com.example.plataformadioggoapi.exception.EntityNotFoundException;
 import com.example.plataformadioggoapi.mapper.AtividadeNotaMapper;
 import com.example.plataformadioggoapi.mapper.NotasMapper;
 import com.example.plataformadioggoapi.model.AtividadeNota;
@@ -17,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotasService {
+
     private final NotasRepository notasRepository;
 
     private Double calcularMedia(List<Double> notas) {
@@ -35,8 +37,16 @@ public class NotasService {
     }
 
     public Notas lancarNota(String matricula,
-                           String disciplinaId,
-                           NotasRequestDTO request) {
+                            String disciplinaId,
+                            NotasRequestDTO request) {
+
+        if (matricula == null || matricula.isBlank()) {
+            throw new BadRequestException("Matrícula é obrigatória.");
+        }
+
+        if (disciplinaId == null || disciplinaId.isBlank()) {
+            throw new BadRequestException("DisciplinaId é obrigatório.");
+        }
 
         Notas nota = notasRepository
                 .findByMatriculaNotaAndDisciplinaId(matricula, disciplinaId)
@@ -49,6 +59,7 @@ public class NotasService {
                 );
 
         if (request.getNotas() != null) {
+
             List<AtividadeNota> novasAtividades = request.getNotas()
                     .stream()
                     .map(AtividadeNotaMapper::toEntity)
@@ -64,8 +75,11 @@ public class NotasService {
 
     public List<NotasResponseDTO> buscarBoletim(String matricula) {
 
-        List<Notas> notas = notasRepository
-                .findByMatriculaNota(matricula);
+        if (matricula == null || matricula.isBlank()) {
+            throw new BadRequestException("Matrícula é obrigatória.");
+        }
+
+        List<Notas> notas = notasRepository.findByMatriculaNota(matricula);
 
         return notas.stream()
                 .map(NotasMapper::toResponse)
@@ -73,14 +87,46 @@ public class NotasService {
     }
 
     public NotasResponseDTO buscarPorDisciplina(String matricula,
-                                               String disciplinaId) {
+                                                String disciplinaId) {
+
+        if (matricula == null || matricula.isBlank()) {
+            throw new BadRequestException("Matrícula é obrigatória.");
+        }
+
+        if (disciplinaId == null || disciplinaId.isBlank()) {
+            throw new BadRequestException("DisciplinaId é obrigatório.");
+        }
 
         Notas nota = notasRepository
                 .findByMatriculaNotaAndDisciplinaId(matricula, disciplinaId)
                 .orElseThrow(() ->
-                        new NotaNotFoundException("Nota não encontrada"));
+                        new EntityNotFoundException("Nota não encontrada"));
 
         return NotasMapper.toResponse(nota);
+    }
+
+    public void excluirAtividade(String id, String nomeAtividade) {
+
+        Notas nota = notasRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Nota não encontrada"));
+
+        if (nota.getNotas() == null || nota.getNotas().isEmpty()) {
+            throw new EntityNotFoundException("Nenhuma atividade encontrada para esta nota.");
+        }
+
+        boolean removed = nota.getNotas().removeIf(atividade ->
+                atividade.getNomeAtividade().equalsIgnoreCase(nomeAtividade)
+        );
+
+        if (!removed) {
+            throw new EntityNotFoundException("Atividade '" + nomeAtividade + "' não encontrada.");
+        }
+
+        recalcularMedias(nota);
+
+        notasRepository.save(nota);
     }
 
     private void recalcularMedias(Notas nota) {

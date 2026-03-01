@@ -52,8 +52,8 @@ public class DisciplinaController {
 
     @PostMapping("/criar")
     @Operation(summary = "Criar nova disciplina", description = "Cria uma nova disciplina com os dados fornecidos")
-    public ResponseEntity<DisciplinaResponseDTO> criarDisciplina(@RequestBody DisciplinaRequestDTO disciplina) {
-        DisciplinaResponseDTO novaDisciplina = disciplinaService.criarDisciplina(disciplina);
+    public ResponseEntity<DisciplinaProfessorResponseDTO> criarDisciplina(@RequestBody DisciplinaRequestDTO disciplina) {
+        DisciplinaProfessorResponseDTO novaDisciplina = disciplinaService.criarDisciplina(disciplina);
         return ResponseEntity.status(201).body(novaDisciplina);
     }
 

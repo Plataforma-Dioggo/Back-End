@@ -23,25 +23,35 @@ public class AdminController {
 
     @PostMapping
     @Operation(summary = "Cria um admin")
-    public ResponseEntity<Boolean> createAdmin(@RequestBody AdminRequestDTO adminRequestDTO) {
-        return ResponseEntity.ok(adminService.createAdmin(adminRequestDTO));
+    public ResponseEntity<AdminResponseDTO> createAdmin(
+            @RequestBody AdminRequestDTO adminRequestDTO) {
+
+        AdminResponseDTO response = adminService.createAdmin(adminRequestDTO);
+        return ResponseEntity.status(201).body(response);
     }
 
     @PostMapping("/login")
     @Operation(summary = "Faz login de um admin")
-    public ResponseEntity<Boolean> loginAdmin(@RequestBody AdminRequestDTO adminRequestDTO) {
-        return ResponseEntity.ok(adminService.loginAdmin(adminRequestDTO));
+    public ResponseEntity<Void> loginAdmin(
+            @RequestBody AdminRequestDTO adminRequestDTO) {
+
+        adminService.loginAdmin(adminRequestDTO);
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/apagar")
+    @DeleteMapping
     @Operation(summary = "Apaga um admin")
-    public ResponseEntity<Boolean> apagarAdmin(@RequestParam String email) {
-        return ResponseEntity.ok(adminService.apagarAdmin(email));
+    public ResponseEntity<Void> apagarAdmin(
+            @RequestParam String email) {
+
+        adminService.apagarAdmin(email);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/findAll")
+    @GetMapping
     @Operation(summary = "Busca todos os admins")
     public ResponseEntity<List<AdminResponseDTO>> findAllAdmins() {
+
         return ResponseEntity.ok(adminService.findAllAdmins());
     }
 }
