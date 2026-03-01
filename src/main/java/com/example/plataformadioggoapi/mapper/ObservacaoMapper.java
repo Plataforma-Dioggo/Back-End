@@ -7,9 +7,9 @@ import com.example.plataformadioggoapi.model.Observacao;
 import java.time.LocalDate;
 
 public class ObservacaoMapper {
-    public static Observacao toEntity(ObservacaoRequestDTO dto, String professorId) {
+    public static Observacao toEntity(ObservacaoRequestDTO dto) {
         return Observacao.builder()
-                .professorId(professorId)
+                .professorId(dto.getProfessorId())
                 .titulo(dto.getTitulo())
                 .descricao(dto.getDescricao())
                 .data(LocalDate.now())
