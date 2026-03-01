@@ -16,9 +16,15 @@ public class ObservacaoMapper {
                 .build();
     }
 
-    public static ObservacaoResponseDTO toResponseDTO(Observacao observacao) {
+    public static ObservacaoResponseDTO toResponseDTO(
+            Observacao observacao,
+            String professorNome,
+            String professorUsuario
+    ) {
         return ObservacaoResponseDTO.builder()
                 .professorId(observacao.getProfessorId())
+                .professorNome(professorNome)
+                .professorUsuario(professorUsuario)
                 .titulo(observacao.getTitulo())
                 .descricao(observacao.getDescricao())
                 .data(observacao.getData())
