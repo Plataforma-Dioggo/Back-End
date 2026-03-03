@@ -105,10 +105,10 @@ public class NotasService {
         return NotasMapper.toResponse(nota);
     }
 
-    public void excluirAtividade(String matricula, String nomeAtividade) {
+    public void excluirAtividade(String matricula, String nomeAtividade, String disciplinaId) {
 
         Notas nota = notasRepository
-                .findByMatriculaNota(matricula)
+                .findByMatriculaNotaAndDisciplinaId(matricula, disciplinaId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Nota não encontrada"));
 
