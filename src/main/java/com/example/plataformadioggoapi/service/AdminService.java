@@ -62,7 +62,6 @@ public class AdminService {
 
         Admin admin = adminMapper.toModel(adminRequestDTO);
 
-        // 🔐 Hash da senha antes de salvar
         admin.setSenha(passwordEncoder.encode(adminRequestDTO.getSenha()));
 
         Admin salvo = adminRepository.save(admin);
